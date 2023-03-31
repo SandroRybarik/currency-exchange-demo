@@ -1,16 +1,4 @@
-export interface CurrencyRate {
-  // Country|Currency|Amount|Code|Rate
-  country: string
-  currency: string
-  amount: number
-  code: string
-  rate: number
-}
-
-export interface CurrencyExchange {
-  date: string // date is already in human readable format
-  rates: CurrencyRate[]
-}
+import { CurrencyExchange, CurrencyRate } from "./types"
 
 /**
  * Parses currecy exchange API result into CurrencyExchange
@@ -42,3 +30,13 @@ export function parseCurrencyCSV(text: string): CurrencyExchange {
 }
 
 
+export const exchange = (fromAmount: number, toCurrencyAmount: number, toCurrencyRate: number) => fromAmount * (toCurrencyAmount / toCurrencyRate)
+
+export function exchangeCZK(amountCZK: number, toCurrencyCode: string, rates: CurrencyRate[]): number | undefined {
+  const rate = rates.find((r) => r.code === toCurrencyCode)
+
+  if (rate !== undefined)
+    return exchange(amountCZK, rate.amount, rate.rate)
+
+  return undefined
+}

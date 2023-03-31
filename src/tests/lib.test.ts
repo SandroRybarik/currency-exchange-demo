@@ -1,4 +1,4 @@
-import { parseCurrencyCSV } from "./api"
+import { parseCurrencyCSV } from "../lib"
 
 const csvMockValue = `
 29 Mar 2023 #63
@@ -37,7 +37,7 @@ const parsedByHand = [
   },
 ]
 
-test('tests parsing', () => {
+test('parsing api csv like data', () => {
   const parse = parseCurrencyCSV(csvMockValue)
   // expect(parse).toBe({})
   expect(parse.date).toBe('29 Mar 2023')
