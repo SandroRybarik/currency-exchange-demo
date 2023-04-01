@@ -5,7 +5,7 @@ import { CurrencyExchange, CurrencyRate } from "./types"
  * @param text csv input string, sourcing from https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt
  */
 export function parseCurrencyCSV(text: string): CurrencyExchange {
-  const lines = text.split("\n")
+  const lines = text.trim().split("\n")
   const [dateWithId, , ...ratesLines] = lines
   // Extract date string
   const justDate = dateWithId.substring(0, dateWithId.indexOf('#') - 1)
