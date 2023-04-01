@@ -1,7 +1,21 @@
-import React, { useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react'
 import { exchangeCZK } from './lib'
 import { useCurrencyRates } from './hooks';
+import {
+  CenteredAlert,
+  Container,
+  ExchangeResult,
+  FullScreenOverlay,
+  Heading,
+  InputGroup,
+  InputLabel,
+  NumberInput,
+  Pick,
+  PlainTable,
+  Row,
+  ShowOn,
+  TableRow
+} from './components';
 
 
 function Exchange() {
@@ -11,25 +25,24 @@ function Exchange() {
   const [exchanged, setExchanged] = useState<number>(0)
   const [exchangeTo, setExchangeTo] = useState<string>('AUD')
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // called at render(), guaranteed that it is defined
-    const guaranteedCurrencyRates = data!
+  useEffect(() => {
+    if (data) {
+      const exchanged = exchangeCZK(amountCZK, exchangeTo, data.rates)
+      setExchanged(exchanged!)
+    }
+  }, [amountCZK, exchangeTo, data])
 
-    e.preventDefault()
-    const exchanged = exchangeCZK(amountCZK, exchangeTo, guaranteedCurrencyRates.rates)
-    setExchanged(exchanged!)
-  }
 
   if (isError) {
-    return <div>
-      Cannot load data
-    </div>
+    return <FullScreenOverlay>
+    <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
+  </FullScreenOverlay>
   }
 
   if (isLoading) {
-    return <div>
-      Waiting for data
-    </div>
+    return <FullScreenOverlay>
+    <CenteredAlert title="Getting currency exchange data..." />
+  </FullScreenOverlay>
   }
 
   const {
@@ -37,25 +50,53 @@ function Exchange() {
   } = data!
 
   return (
-    <div className="App">
-      <h2>Currency exchange</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input type='number' placeholder='CZK' value={amountCZK} onChange={e => setAmountCZK(Number(e.target.value))} />
-          <select value={exchangeTo} onChange={e => setExchangeTo(e.target.value)}>
-            {rates.map(r =>
-              <option value={r.code} key={r.code}>
-                {r.code} - {r.country}
-              </option>
-            )}
-          </select>
-          <button>Submit</button>
-        </div>
-        <div>
-          Exchanged: {exchanged.toFixed(3)}
-        </div>
+    <Container>
+      <Heading>Currency exchange</Heading>
+      <ShowOn screens={['mobile']}>
+        <ExchangeResult>
+          {amountCZK} CZK &#8594; {exchanged.toFixed(3)} {exchangeTo}
+        </ExchangeResult>
+      </ShowOn>
+      <form onSubmit={e => e.preventDefault()}>
+        <Row>
+          <InputGroup>
+            <InputLabel htmlFor='input_czk'>CZK</InputLabel>
+            <NumberInput id='input_czk' type='number' placeholder='CZK' value={amountCZK === 0 ? '' : amountCZK.toString()} onChange={e => setAmountCZK(Number(e.target.value))} />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel htmlFor='ouput_currency'>TO</InputLabel>
+            <Pick id='ouput_currency' value={exchangeTo} onChange={e => setExchangeTo(e.target.value)}>
+              {rates.map(r =>
+                <option value={r.code} key={r.code}>
+                  {r.code} - {r.country}
+                </option>
+              )}
+            </Pick>
+          </InputGroup>
+        </Row>
       </form>
-    </div>
+      <ShowOn screens={['tablet']}>
+        <ExchangeResult>
+          {amountCZK} CZK &#8594; {exchanged.toFixed(3)} {exchangeTo}
+        </ExchangeResult>
+      </ShowOn>
+      <PlainTable>
+        <thead>
+          <TableRow>
+            {['Country', 'Currency', 'Amount', 'Code', 'Rate'].map(th => <th key={th}>{th}</th>)}
+          </TableRow>
+        </thead>
+        <tbody>
+          {rates.map(r => <TableRow highlight={r.code === exchangeTo}>
+            <td>{r.country}</td>
+            <td>{r.currency}</td>
+            <td>{r.amount}</td>
+            <td>{r.code}</td>
+            <td>{r.rate}</td>
+          </TableRow>)}
+        </tbody>
+      </PlainTable>
+    </Container>
   );
 }
 
