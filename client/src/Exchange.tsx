@@ -49,8 +49,6 @@ function Exchange() {
     rates
   } = data!
 
-  console.log('HEY', rates)
-
   return (
     <Container>
       <Heading>Currency exchange</Heading>
