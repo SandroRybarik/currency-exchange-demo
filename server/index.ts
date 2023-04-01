@@ -5,7 +5,7 @@ const port = process.env.PORT
 
 const API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
 
-if (port === undefined) {
+if (process.env.NODE_ENV !== 'production' && port === undefined) {
   console.error('Specify PORT environment variable `PORT=<XXXX> npm start`')
   process.exit(1)
 }
@@ -18,7 +18,7 @@ const corsHeaders = (_: Request, res: Response, next: NextFunction) => {
 
 app.use(corsHeaders)
 
-app.get('/exchange', (_: Request, res: Response) => {
+app.get('/', (_: Request, res: Response) => {
   fetch(API_URL)
     .then(r => r.text())
     .then(txt => {
