@@ -19,7 +19,7 @@ import {
 
 
 function Exchange() {
-  const { data, isLoading, isError } = useCurrencyRates()
+  const { data, isLoading, isError,  } = useCurrencyRates()
 
   const [amountCZK, setAmountCZK] = useState<number>(0)
   const [exchanged, setExchanged] = useState<number>(0)
@@ -35,19 +35,21 @@ function Exchange() {
 
   if (isError) {
     return <FullScreenOverlay>
-    <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
-  </FullScreenOverlay>
+      <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
+    </FullScreenOverlay>
   }
 
   if (isLoading) {
     return <FullScreenOverlay>
-    <CenteredAlert title="Getting currency exchange data..." />
-  </FullScreenOverlay>
+      <CenteredAlert title="Getting currency exchange data..." />
+    </FullScreenOverlay>
   }
 
   const {
     rates
   } = data!
+
+  console.log('HEY', rates)
 
   return (
     <Container>
