@@ -33,15 +33,15 @@ function Exchange() {
   }, [amountCZK, exchangeTo, data])
 
 
-  if (isError) {
-    return <FullScreenOverlay>
-      <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
-    </FullScreenOverlay>
-  }
-
   if (isLoading) {
     return <FullScreenOverlay>
       <CenteredAlert title="Getting currency exchange data..." />
+    </FullScreenOverlay>
+  }
+
+  if (isError || data === undefined) {
+    return <FullScreenOverlay>
+      <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
     </FullScreenOverlay>
   }
 
