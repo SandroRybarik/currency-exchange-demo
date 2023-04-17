@@ -33,14 +33,14 @@ const parsedByHand = [
     currency: 'dollar',
     amount: 1,
     code: 'HKD',
-    rate: 2.775, 
+    rate: 2.775,
   },
 ]
 
 test('parsing api csv like data', () => {
   const parse = parseCurrencyCSV(csvMockValue)
-  // expect(parse).toBe({})
   expect(parse.date).toBe('29 Mar 2023')
+  expect(parse.columns).toStrictEqual(['Country', 'Currency', 'Amount', 'Code', 'Rate'])
   expect(parse.rates[0]).toStrictEqual(parsedByHand[0])
   expect(parse.rates[5]).toStrictEqual(parsedByHand[1])
   expect(parse.rates[7]).toStrictEqual(parsedByHand[2])

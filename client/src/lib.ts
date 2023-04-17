@@ -6,9 +6,11 @@ import { CurrencyExchange, CurrencyRate } from "./types"
  */
 export function parseCurrencyCSV(text: string): CurrencyExchange {
   const lines = text.trim().split("\n")
-  const [dateWithId, , ...ratesLines] = lines
+  const [dateWithId, thead, ...ratesLines] = lines
   // Extract date string
   const justDate = dateWithId.substring(0, dateWithId.indexOf('#') - 1)
+  // Parse table columns
+  const columns = thead.split("|")
 
   // Parse currency lines into CurrencyRate[]
   const rates: CurrencyRate[] = ratesLines.map(l => {
@@ -25,6 +27,7 @@ export function parseCurrencyCSV(text: string): CurrencyExchange {
 
   return {
     date: justDate,
+    columns,
     rates,
   }
 }
