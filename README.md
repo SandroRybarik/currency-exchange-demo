@@ -1,11 +1,11 @@
 # Currency Exchange Demo
 
-Purpose: demonstrate mainly React skills while using other libraries. 
+Purpose: demonstrate mainly React skills while using other libraries.
 
 ## Development
 
 1. Install npm deps `npm --prefix ./client i && npm --prefix ./server i`
-1. To start local server `PORT=3333 npm --prefix ./server dev`
+1. To start local server `PORT=3333 npm --prefix ./server run dev`
 1. To start local react app `REACT_APP_API="http://localhost:3333" npm --prefix ./client start`
 
 Note:
