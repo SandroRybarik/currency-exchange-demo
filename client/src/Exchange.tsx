@@ -1,25 +1,21 @@
 import { useEffect, useState } from 'react'
 import { exchangeCZK } from './lib'
-import { useCurrencyRates } from './hooks';
-import {
-  CenteredAlert,
-  Container,
-  ExchangeResult,
-  FullScreenOverlay,
-  Heading,
-  InputGroup,
-  InputLabel,
-  NumberInput,
-  Pick,
-  PlainTable,
-  Row,
-  ShowOn,
-  TableRow
-} from './components';
-
+import { useCurrencyRates } from './hooks'
+import Container from './components/Layout/Container'
+import Row from './components/Layout/Row'
+import InputGroup from './components/Controls/InputGroup'
+import InputLabel from './components/Controls/InputLabel'
+import NumberInput from './components/Controls/NumberInput'
+import Pick from './components/Controls/Pick'
+import ExchangeResult from './components/ExchangeResult'
+import CenteredAlert from './components/FullscreenOverlay'
+import Heading from './components/Heading'
+import ShowOn from './components/Layout/ShowOn'
+import PlainTable from './components/PlainTable'
+import TableRow from './components/TableRow'
 
 function Exchange() {
-  const { data, isLoading, isError,  } = useCurrencyRates()
+  const { data, isLoading, isError, } = useCurrencyRates()
 
   const [amountCZK, setAmountCZK] = useState<number>(0)
   const [exchanged, setExchanged] = useState<number>(0)
@@ -34,18 +30,15 @@ function Exchange() {
 
 
   if (isLoading) {
-    return <FullScreenOverlay>
-      <CenteredAlert title="Getting currency exchange data..." />
-    </FullScreenOverlay>
+    return <CenteredAlert title="Getting currency exchange data..." />
   }
 
   if (isError || data === undefined) {
-    return <FullScreenOverlay>
-      <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
-    </FullScreenOverlay>
+    return <CenteredAlert title="Hmm... We are unable to get currency exchange data" />
   }
 
   const {
+    columns,
     rates
   } = data!
 
@@ -83,7 +76,7 @@ function Exchange() {
       <PlainTable>
         <thead>
           <TableRow>
-            {['Country', 'Currency', 'Amount', 'Code', 'Rate'].map(th => <th key={th}>{th}</th>)}
+            {columns.map(th => <th key={th}>{th}</th>)}
           </TableRow>
         </thead>
         <tbody>
